@@ -10,6 +10,7 @@ import re
 
 # SMILES and InChI regexes
 SMILES_RE = r"^([A-IK-Za-ik-z0-9@+\-\[\]\(\)\\/=#%:.$]+)$"
+SMARTS_RE = r"^[^\s]$"  # SMARTS allow for most chars, but not whitespace
 INCHI_RE = r"^((InChI=)(.*?)[^J][0-9a-z+\-\(\)\\\/,.?*;]+)$"
 
 
@@ -109,6 +110,8 @@ def load_molecule(mol_string: str) -> Chem.Mol:
         rdmol = Chem.MolFromInchi(mol_string)
     elif re.match(SMILES_RE, mol_string, flags=0):
         rdmol = Chem.MolFromSmiles(mol_string)
+    elif re.match(SMARTS_RE, mol_string, flags=0):
+        rdmol = Chem.MolFromSmarts(mol_string)
     else:
         rdmol = Chem.MolFromMolBlock(mol_string)
     return rdmol
