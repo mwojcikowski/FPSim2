@@ -132,8 +132,12 @@ py::array_t<Result> TverskySearch(const py::array_t<uint64_t> py_query,
         for (auto j = 1; j < popcnt_idx; j++) {
             // popcnts of both relative complements and intersection
             common_popcnt += popcntll(qptr[j] & dbptr[j]);
-            rel_co_popcnt += popcntll(qptr[j] & ~dbptr[j]);
-            rel_co_popcnt2 += popcntll(dbptr[j] & ~qptr[j]);
+            if (a > 0.0) {
+                rel_co_popcnt += popcntll(qptr[j] & ~dbptr[j]);
+            }
+            if (b > 0.0) {
+                rel_co_popcnt2 += popcntll(dbptr[j] & ~qptr[j]);
+            }
         }
         coeff = TverskyCoeff(common_popcnt, rel_co_popcnt, rel_co_popcnt2, a, b);
         if (coeff >= threshold)
