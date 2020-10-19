@@ -106,7 +106,9 @@ def load_molecule(mol_string: str) -> Chem.Mol:
     mol: ROMol
         RDKit molecule.
     """
-    if re.search(INCHI_RE, mol_string, flags=re.IGNORECASE):
+    if isinstance(mol_string, Chem.Mol):
+        rdmol = mol_string
+    elif re.search(INCHI_RE, mol_string, flags=re.IGNORECASE):
         rdmol = Chem.MolFromInchi(mol_string)
     elif re.match(SMILES_RE, mol_string, flags=0):
         rdmol = Chem.MolFromSmiles(mol_string)
