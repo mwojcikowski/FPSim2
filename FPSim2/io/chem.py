@@ -2,7 +2,10 @@ from typing import Any, Callable, Iterable as IterableType, Dict, List, Tuple, U
 from FPSim2.FPSim2lib.utils import BitStrToIntList, PyPopcount
 from collections.abc import Iterable
 from rdkit.Chem import rdMolDescriptors
-from rdkit.Avalon import pyAvalonTools
+try:
+    from rdkit.Avalon import pyAvalonTools
+except ImportError as e:
+    pyAvalonTools = None
 from rdkit import Chem
 import numpy as np
 import re
@@ -16,7 +19,7 @@ INCHI_RE = r"^((InChI=)(.*?)[^J][0-9a-z+\-\(\)\\\/,.?*;]+)$"
 
 FP_FUNCS = {
     "MACCSKeys": rdMolDescriptors.GetMACCSKeysFingerprint,
-    "Avalon": pyAvalonTools.GetAvalonFP,
+    "Avalon": pyAvalonTools.GetAvalonFP if pyAvalonTools else None,
     "Morgan": rdMolDescriptors.GetMorganFingerprintAsBitVect,
     "TopologicalTorsion": rdMolDescriptors.GetHashedTopologicalTorsionFingerprintAsBitVect,
     "AtomPair": rdMolDescriptors.GetHashedAtomPairFingerprintAsBitVect,
